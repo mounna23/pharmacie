@@ -1,9 +1,15 @@
 package com.example.backendpharmacie.service;
 
+import com.example.backendpharmacie.config.JwtService;
+
 import com.example.backendpharmacie.model.Utilisateur;
 import com.example.backendpharmacie.repository.UtilisateurRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.crypto.password.PasswordEncoder;
+
 
 import java.util.List;
 import java.util.Optional;
@@ -42,4 +48,8 @@ public class UtilisateurService {
     public List<Utilisateur> rechercherUtilisateurs(String searchTerm) {
         return utilisateurRepository.findByNomOrPrenomContainingIgnoreCase(searchTerm);
     }
+
+
+
+
 }

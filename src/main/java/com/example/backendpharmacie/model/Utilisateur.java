@@ -2,10 +2,24 @@ package com.example.backendpharmacie.model;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
+import java.util.Collection;
+import java.util.List;
 
 @Entity
 @Table(name = "utilisateur")
-public class Utilisateur {
+@Data // Génère automatiquement getters/setters
+//@NoArgsConstructor // Constructeur sans arguments
+@AllArgsConstructor
+@Builder
+public class Utilisateur implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -35,60 +49,46 @@ public class Utilisateur {
     @Column(name = "adresse", nullable = false)
     private String adresse;
 
-    // Getters et setters
-    public Long getId() {
-        return id;
+    public Utilisateur() {
+
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    // Getters et Setters
+    // ... (votre code existant)
+
+    // Implémentation des méthodes UserDetails
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return List.of(new SimpleGrantedAuthority("USER"));
     }
 
-    public String getNom() {
-        return nom;
-    }
-
-    public void setNom(String nom) {
-        this.nom = nom;
-    }
-
-    public String getPrenom() {
-        return prenom;
-    }
-
-    public void setPrenom(String prenom) {
-        this.prenom = prenom;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getMotDePasse() {
+    @Override
+    public String getPassword() {
         return motDePasse;
     }
 
-    public void setMotDePasse(String motDePasse) {
-        this.motDePasse = motDePasse;
+    @Override
+    public String getUsername() {
+        return email;
     }
 
-    public String getTelephone() {
-        return telephone;
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
     }
 
-    public void setTelephone(String telephone) {
-        this.telephone = telephone;
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
     }
 
-    public String getAdresse() {
-        return adresse;
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
     }
 
-    public void setAdresse(String adresse) {
-        this.adresse = adresse;
+    @Override
+    public boolean isEnabled() {
+        return true;
     }
 }
