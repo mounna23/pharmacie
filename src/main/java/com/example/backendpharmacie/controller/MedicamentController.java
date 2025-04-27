@@ -1,82 +1,98 @@
 package com.example.backendpharmacie.controller;
 
 import com.example.backendpharmacie.model.Medicament;
-import com.example.backendpharmacie.service.MedicamentService;
-import jakarta.validation.Valid;
+import com.example.backendpharmacie.repository.MedicamentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.MediaType;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
-        import java.util.List;
+import java.io.IOException;
+import java.nio.file.*;
+import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/api/medicaments")
+@CrossOrigin("*")
 public class MedicamentController {
 
     @Autowired
-    private MedicamentService medicamentService;
+    private MedicamentRepository medicamentRepository;
 
-    // Endpoint pour ajouter un médicament
-    @PostMapping
-    public ResponseEntity<Medicament> ajouterMedicament(@Valid @RequestBody Medicament medicament) {
-        Medicament nouveauMedicament = medicamentService.ajouterMedicament(medicament);
-        return ResponseEntity.ok(nouveauMedicament);
-    }
+    private final String storageDirectoryPath = Paths.get("uploaded-images").toAbsolutePath().toString();
 
-    // Endpoint pour récupérer tous les médicaments
-    @GetMapping
-    public ResponseEntity<List<Medicament>> listerMedicaments() {
-        List<Medicament> medicaments = medicamentService.listerMedicaments();
-        return ResponseEntity.ok(medicaments);
-    }
+    // Version avec upload de fichier (multipart/form-data)
+    @PostMapping(value = "/medicament", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public Medicament newMedicamentWithFile(
+            @RequestParam("codeMed") String codeMed,
+            @RequestParam("libelle") String libelle,
+            @RequestParam("dateExpiration") String dateExpiration,
+            @RequestParam(value = "prixUnitaire", required = false) Double prixUnitaire,
+            @RequestParam(value = "stockMin", required = false) Integer stockMin,
+            @RequestParam("familleMed") String familleMed,
+            @RequestParam("image") MultipartFile file) throws IOException {
 
-    // Endpoint pour récupérer un médicament par son ID
-    @GetMapping("/{id}")
-    public ResponseEntity<Medicament> trouverMedicamentParId(@PathVariable Long id) {
-        Optional<Medicament> optionalMedicament = medicamentService.trouverMedicamentParId(id);
-        if (optionalMedicament.isPresent()) {
-            return ResponseEntity.ok(optionalMedicament.get());
-        } else {
-            return ResponseEntity.notFound().build();
+        String baseUrl = "uploaded-images/";
+        String filename = StringUtils.cleanPath(file.getOriginalFilename());
+
+        Path storageDirectory = Paths.get(storageDirectoryPath);
+        if (!Files.exists(storageDirectory)) {
+            Files.createDirectories(storageDirectory);
         }
+
+        Path destinationPath = storageDirectory.resolve(filename);
+        file.transferTo(destinationPath);
+
+        Medicament medicament = new Medicament();
+        medicament.setCodeMed(codeMed);
+        medicament.setLibelle(libelle);
+        medicament.setDateExpiration(java.sql.Date.valueOf(dateExpiration));
+        medicament.setPrixUnitaire(prixUnitaire);
+        medicament.setStockMin(stockMin);
+        medicament.setFamilleMed(familleMed);
+        medicament.setImage(baseUrl + filename);
+
+        return medicamentRepository.save(medicament);
     }
 
-    // Endpoint pour mettre à jour un médicament
-    @PutMapping("/{id}")
-    public ResponseEntity<Medicament> mettreAJourMedicament(@PathVariable Long id, @Valid @RequestBody Medicament medicamentDetails) {
-        Optional<Medicament> optionalMedicament = medicamentService.trouverMedicamentParId(id);
-        if (optionalMedicament.isPresent()) {
-            Medicament medicament = optionalMedicament.get();
-            medicament.setCodeMed(medicamentDetails.getCodeMed());
-            medicament.setLibelle(medicamentDetails.getLibelle());
-            medicament.setDateExpiration(medicamentDetails.getDateExpiration());
-            medicament.setPrixUnitaire(medicamentDetails.getPrixUnitaire());
-            medicament.setStockMin(medicamentDetails.getStockMin());
-            medicament.setFamilleMed(medicamentDetails.getFamilleMed());
+    // Version avec JSON dans le body
+    @PostMapping(value = "/medicament", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public Medicament newMedicamentWithJson(@RequestBody Medicament medicament) {
+        return medicamentRepository.save(medicament);
+    }
 
-            Medicament medicamentMiseAJour = medicamentService.mettreAJourMedicament(medicament);
-            return ResponseEntity.ok(medicamentMiseAJour);
-        } else {
-            return ResponseEntity.notFound().build();
+    @GetMapping("/medicaments")
+    public List<Medicament> getAllMedicaments() {
+        return medicamentRepository.findAll();
+    }
+
+    @GetMapping("/medicament/{id}")
+    public Optional<Medicament> getMedicamentById(@PathVariable Long id) {
+        return medicamentRepository.findById(id);
+    }
+
+    @PutMapping("/medicament/{id}")
+    public Optional<Medicament> updateMedicament(@RequestBody Medicament newMedicament, @PathVariable Long id) {
+        return medicamentRepository.findById(id).map(medicament -> {
+            if (newMedicament.getCodeMed() != null) medicament.setCodeMed(newMedicament.getCodeMed());
+            if (newMedicament.getLibelle() != null) medicament.setLibelle(newMedicament.getLibelle());
+            if (newMedicament.getDateExpiration() != null) medicament.setDateExpiration(newMedicament.getDateExpiration());
+            if (newMedicament.getPrixUnitaire() != null) medicament.setPrixUnitaire(newMedicament.getPrixUnitaire());
+            if (newMedicament.getStockMin() != null) medicament.setStockMin(newMedicament.getStockMin());
+            if (newMedicament.getFamilleMed() != null) medicament.setFamilleMed(newMedicament.getFamilleMed());
+            if (newMedicament.getImage() != null) medicament.setImage(newMedicament.getImage());
+
+            return medicamentRepository.save(medicament);
+        });
+    }
+
+    @DeleteMapping("/medicament/{id}")
+    public String deleteMedicament(@PathVariable Long id) {
+        if (!medicamentRepository.existsById(id)) {
+            return "Médicament introuvable";
         }
-    }
-
-    // Endpoint pour supprimer un médicament
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> supprimerMedicament(@PathVariable Long id) {
-        Optional<Medicament> optionalMedicament = medicamentService.trouverMedicamentParId(id);
-        if (optionalMedicament.isPresent()) {
-            medicamentService.supprimerMedicament(id);
-            return ResponseEntity.noContent().build();
-        } else {
-            return ResponseEntity.notFound().build();
-        }
-    }
-
-    @GetMapping(params = "search")
-    public ResponseEntity<List<Medicament>> rechercherMedicaments(@RequestParam String search) {
-        List<Medicament> medicaments = medicamentService.rechercherMedicaments(search);
-        return ResponseEntity.ok(medicaments);
+        medicamentRepository.deleteById(id);
+        return "Médicament avec id " + id + " a été supprimé";
     }
 }

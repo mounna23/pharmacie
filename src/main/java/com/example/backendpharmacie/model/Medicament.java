@@ -28,17 +28,21 @@ public class Medicament {
 
     @Column(name = "famille_med", nullable = false)
     private String familleMed;
+    @Column(name = "image", nullable = false)
+    private String image;
+
 
     // Constructeurs, getters et setters
     public Medicament() {}
 
-    public Medicament(String codeMed, String libelle, Date dateExpiration, Double prixUnitaire, Integer stockMin, String familleMed) {
+    public Medicament(String codeMed, String libelle, Date dateExpiration, Double prixUnitaire, Integer stockMin, String familleMed, String image) {
         this.codeMed = codeMed;
         this.libelle = libelle;
         this.dateExpiration = dateExpiration;
         this.prixUnitaire = prixUnitaire;
         this.stockMin = stockMin;
         this.familleMed = familleMed;
+        this.image = image;
     }
 
     public Long getId() {
@@ -95,5 +99,12 @@ public class Medicament {
 
     public void setFamilleMed(String familleMed) {
         this.familleMed = familleMed;
+    }
+    public String getImage() {
+        return image;
+    }
+    public void setImage(String image)
+    {
+        this.image = image;
     }
 }
