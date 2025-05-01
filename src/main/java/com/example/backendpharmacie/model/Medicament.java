@@ -1,7 +1,7 @@
 package com.example.backendpharmacie.model;
 
 import jakarta.persistence.*;
-        import java.util.Date;
+import java.util.Date;
 
 @Entity
 @Table(name = "medicament")
@@ -28,14 +28,19 @@ public class Medicament {
 
     @Column(name = "famille_med", nullable = false)
     private String familleMed;
+
     @Column(name = "image", nullable = false)
     private String image;
 
+    @Column(name = "qte_stock", nullable = false)
+    private Integer qteStock;
 
-    // Constructeurs, getters et setters
+    // Constructeurs
     public Medicament() {}
 
-    public Medicament(String codeMed, String libelle, Date dateExpiration, Double prixUnitaire, Integer stockMin, String familleMed, String image) {
+    public Medicament(String codeMed, String libelle, Date dateExpiration,
+                      Double prixUnitaire, Integer stockMin, String familleMed,
+                      String image, Integer qteStock) {
         this.codeMed = codeMed;
         this.libelle = libelle;
         this.dateExpiration = dateExpiration;
@@ -43,8 +48,10 @@ public class Medicament {
         this.stockMin = stockMin;
         this.familleMed = familleMed;
         this.image = image;
+        this.qteStock = qteStock;
     }
 
+    // Getters et Setters
     public Long getId() {
         return id;
     }
@@ -100,11 +107,21 @@ public class Medicament {
     public void setFamilleMed(String familleMed) {
         this.familleMed = familleMed;
     }
+
     public String getImage() {
         return image;
     }
-    public void setImage(String image)
-    {
+
+    public void setImage(String image) {
         this.image = image;
+    }
+
+    // Getter et setter pour le nouvel attribut
+    public Integer getQteStock() {
+        return qteStock;
+    }
+
+    public void setQteStock(Integer qteStock) {
+        this.qteStock = qteStock;
     }
 }
