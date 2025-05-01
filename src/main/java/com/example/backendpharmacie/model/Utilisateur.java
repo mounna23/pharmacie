@@ -16,9 +16,9 @@ import java.util.List;
 @Entity
 @Table(name = "utilisateur")
 @Data // Génère automatiquement getters/setters
-//@NoArgsConstructor // Constructeur sans arguments
-@AllArgsConstructor
-@Builder
+@NoArgsConstructor // Constructeur sans arguments
+@AllArgsConstructor // Constructeur avec tous les arguments
+@Builder // Génère la méthode builder()
 public class Utilisateur implements UserDetails {
 
     @Id
@@ -48,13 +48,6 @@ public class Utilisateur implements UserDetails {
     @NotBlank(message = "L'adresse est obligatoire")
     @Column(name = "adresse", nullable = false)
     private String adresse;
-
-    public Utilisateur() {
-
-    }
-
-    // Getters et Setters
-    // ... (votre code existant)
 
     // Implémentation des méthodes UserDetails
     @Override

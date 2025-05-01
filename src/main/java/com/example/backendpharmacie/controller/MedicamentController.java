@@ -22,7 +22,7 @@ public class MedicamentController {
 
     private final String storageDirectoryPath = Paths.get("uploaded-images").toAbsolutePath().toString();
 
-    // Version avec upload de fichier (multipart/form-data)
+    // POST avec multipart/form-data (incluant qteStock)
     @PostMapping(value = "/medicament", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public Medicament newMedicamentWithFile(
             @RequestParam("codeMed") String codeMed,
@@ -32,7 +32,8 @@ public class MedicamentController {
             @RequestParam(value = "stockMin", required = false) Integer stockMin,
             @RequestParam("qteStock") Integer qteStock,
             @RequestParam("familleMed") String familleMed,
-            @RequestParam("image") MultipartFile file) throws IOException {
+            @RequestParam("image") MultipartFile file,
+            @RequestParam("qteStock") Integer qteStock) throws IOException {  // Nouveau paramètre
 
         String baseUrl = "uploaded-images/";
         String filename = StringUtils.cleanPath(file.getOriginalFilename());
@@ -54,11 +55,12 @@ public class MedicamentController {
         medicament.setQteStock(qteStock);
         medicament.setFamilleMed(familleMed);
         medicament.setImage(baseUrl + filename);
+        medicament.setQteStock(qteStock);  // Ajout du nouveau champ
 
         return medicamentRepository.save(medicament);
     }
 
-    // Version avec JSON dans le body
+    // POST avec JSON (utilise directement l'entité Medicament)
     @PostMapping(value = "/medicament", consumes = MediaType.APPLICATION_JSON_VALUE)
     public Medicament newMedicamentWithJson(@RequestBody Medicament medicament) {
         return medicamentRepository.save(medicament);
@@ -85,6 +87,7 @@ public class MedicamentController {
             if (newMedicament.getQteStock() != null) medicament.setQteStock(newMedicament.getQteStock());
             if (newMedicament.getFamilleMed() != null) medicament.setFamilleMed(newMedicament.getFamilleMed());
             if (newMedicament.getImage() != null) medicament.setImage(newMedicament.getImage());
+            if (newMedicament.getQteStock() != null) medicament.setQteStock(newMedicament.getQteStock()); // Ajout ici
 
             return medicamentRepository.save(medicament);
         });
