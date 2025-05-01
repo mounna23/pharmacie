@@ -32,8 +32,7 @@ public class MedicamentController {
             @RequestParam(value = "stockMin", required = false) Integer stockMin,
             @RequestParam("qteStock") Integer qteStock,
             @RequestParam("familleMed") String familleMed,
-            @RequestParam("image") MultipartFile file,
-            @RequestParam("qteStock") Integer qteStock) throws IOException {  // Nouveau paramètre
+            @RequestParam("image") MultipartFile file) throws IOException {  // Nouveau paramètre
 
         String baseUrl = "uploaded-images/";
         String filename = StringUtils.cleanPath(file.getOriginalFilename());
@@ -55,7 +54,6 @@ public class MedicamentController {
         medicament.setQteStock(qteStock);
         medicament.setFamilleMed(familleMed);
         medicament.setImage(baseUrl + filename);
-        medicament.setQteStock(qteStock);  // Ajout du nouveau champ
 
         return medicamentRepository.save(medicament);
     }
@@ -87,7 +85,6 @@ public class MedicamentController {
             if (newMedicament.getQteStock() != null) medicament.setQteStock(newMedicament.getQteStock());
             if (newMedicament.getFamilleMed() != null) medicament.setFamilleMed(newMedicament.getFamilleMed());
             if (newMedicament.getImage() != null) medicament.setImage(newMedicament.getImage());
-            if (newMedicament.getQteStock() != null) medicament.setQteStock(newMedicament.getQteStock()); // Ajout ici
 
             return medicamentRepository.save(medicament);
         });

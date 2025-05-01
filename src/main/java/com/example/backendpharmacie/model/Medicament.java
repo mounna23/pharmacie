@@ -26,14 +26,16 @@ public class Medicament {
     @Column(name = "stock_min", nullable = false)
     private Integer stockMin;
 
+    @Column(name = "qte_stock", nullable = false)
+    private Integer qteStock;
+
+
     @Column(name = "famille_med", nullable = false)
     private String familleMed;
 
     @Column(name = "image", nullable = false)
     private String image;
 
-    @Column(name = "qte_stock", nullable = false)
-    private Integer qteStock;
 
     // Constructeurs
     public Medicament() {}
