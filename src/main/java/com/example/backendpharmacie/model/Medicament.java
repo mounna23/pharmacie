@@ -25,6 +25,8 @@ public class Medicament {
 
     @Column(name = "stock_min", nullable = false)
     private Integer stockMin;
+    @Column(name = "qte_stock", nullable = false)
+    private Integer qteStock;
 
     @Column(name = "famille_med", nullable = false)
     private String familleMed;
@@ -35,12 +37,13 @@ public class Medicament {
     // Constructeurs, getters et setters
     public Medicament() {}
 
-    public Medicament(String codeMed, String libelle, Date dateExpiration, Double prixUnitaire, Integer stockMin, String familleMed, String image) {
+    public Medicament(String codeMed, String libelle, Date dateExpiration, Double prixUnitaire, Integer stockMin,Integer qteStock,String familleMed, String image) {
         this.codeMed = codeMed;
         this.libelle = libelle;
         this.dateExpiration = dateExpiration;
         this.prixUnitaire = prixUnitaire;
         this.stockMin = stockMin;
+        this.qteStock = qteStock;
         this.familleMed = familleMed;
         this.image = image;
     }
@@ -106,5 +109,12 @@ public class Medicament {
     public void setImage(String image)
     {
         this.image = image;
+    }
+    public Integer getQteStock() {
+        return qteStock;
+    }
+
+    public void setQteStock(Integer qteStock) {
+        this.qteStock = qteStock;
     }
 }

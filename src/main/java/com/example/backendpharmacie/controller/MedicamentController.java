@@ -30,6 +30,7 @@ public class MedicamentController {
             @RequestParam("dateExpiration") String dateExpiration,
             @RequestParam(value = "prixUnitaire", required = false) Double prixUnitaire,
             @RequestParam(value = "stockMin", required = false) Integer stockMin,
+            @RequestParam("qteStock") Integer qteStock,
             @RequestParam("familleMed") String familleMed,
             @RequestParam("image") MultipartFile file) throws IOException {
 
@@ -50,6 +51,7 @@ public class MedicamentController {
         medicament.setDateExpiration(java.sql.Date.valueOf(dateExpiration));
         medicament.setPrixUnitaire(prixUnitaire);
         medicament.setStockMin(stockMin);
+        medicament.setQteStock(qteStock);
         medicament.setFamilleMed(familleMed);
         medicament.setImage(baseUrl + filename);
 
@@ -80,6 +82,7 @@ public class MedicamentController {
             if (newMedicament.getDateExpiration() != null) medicament.setDateExpiration(newMedicament.getDateExpiration());
             if (newMedicament.getPrixUnitaire() != null) medicament.setPrixUnitaire(newMedicament.getPrixUnitaire());
             if (newMedicament.getStockMin() != null) medicament.setStockMin(newMedicament.getStockMin());
+            if (newMedicament.getQteStock() != null) medicament.setQteStock(newMedicament.getQteStock());
             if (newMedicament.getFamilleMed() != null) medicament.setFamilleMed(newMedicament.getFamilleMed());
             if (newMedicament.getImage() != null) medicament.setImage(newMedicament.getImage());
 
