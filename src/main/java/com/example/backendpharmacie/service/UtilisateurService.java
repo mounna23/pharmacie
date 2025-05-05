@@ -1,15 +1,10 @@
 package com.example.backendpharmacie.service;
 
-import com.example.backendpharmacie.config.JwtService;
-
 import com.example.backendpharmacie.model.Utilisateur;
 import com.example.backendpharmacie.repository.UtilisateurRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
-
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
@@ -20,8 +15,15 @@ public class UtilisateurService {
     @Autowired
     private UtilisateurRepository utilisateurRepository;
 
-    // Ajouter un utilisateur
+    @Autowired
+    private PasswordEncoder passwordEncoder; // ✅ Injection réussie via Spring
+
     public Utilisateur ajouterUtilisateur(Utilisateur utilisateur) {
+        // 🔐 Hacher le mot de passe avant sauvegarde
+        String rawPassword = utilisateur.getMotDePasse();
+        String encodedPassword = passwordEncoder.encode(rawPassword);
+        utilisateur.setMotDePasse(encodedPassword);
+
         return utilisateurRepository.save(utilisateur);
     }
 
@@ -48,8 +50,4 @@ public class UtilisateurService {
     public List<Utilisateur> rechercherUtilisateurs(String searchTerm) {
         return utilisateurRepository.findByNomOrPrenomContainingIgnoreCase(searchTerm);
     }
-
-
-
-
 }

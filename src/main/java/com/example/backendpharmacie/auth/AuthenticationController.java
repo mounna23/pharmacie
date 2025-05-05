@@ -1,6 +1,8 @@
 package com.example.backendpharmacie.auth;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
+import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -22,7 +24,7 @@ public class AuthenticationController {
 
     @PostMapping("/register")
     public ResponseEntity<?> register(@Valid @RequestBody RegisterRequest request) {
-        System.out.println("Requête reçue pour l'inscription : " + request); // Log
+        System.out.println("Requête reçue pour l'inscription : " + request);
         try {
             AuthenticationResponse response = service.register(request);
             return ResponseEntity.ok()
@@ -52,5 +54,17 @@ public class AuthenticationController {
                             "message", e.getMessage()
                     ));
         }
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity<?> logout(HttpServletRequest request) {
+        String authHeader = request.getHeader("Authorization");
+        if (authHeader != null && authHeader.startsWith("Bearer ")) {
+            String token = authHeader.substring(7);
+            // Ici vous devriez invalider le token (dépend de votre implémentation JWT)
+            // tokenBlacklistService.addToBlacklist(token); // Exemple
+            return ResponseEntity.ok().build();
+        }
+        return ResponseEntity.badRequest().build();
     }
 }
