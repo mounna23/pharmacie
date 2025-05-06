@@ -61,8 +61,6 @@ public class AuthenticationController {
         String authHeader = request.getHeader("Authorization");
         if (authHeader != null && authHeader.startsWith("Bearer ")) {
             String token = authHeader.substring(7);
-            // Ici vous devriez invalider le token (dépend de votre implémentation JWT)
-            // tokenBlacklistService.addToBlacklist(token); // Exemple
             return ResponseEntity.ok().build();
         }
         return ResponseEntity.badRequest().build();

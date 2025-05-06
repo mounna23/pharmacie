@@ -2,6 +2,7 @@ package com.example.backendpharmacie.controller;
 
 import com.example.backendpharmacie.model.Medicament;
 import com.example.backendpharmacie.repository.MedicamentRepository;
+import com.example.backendpharmacie.service.MedicamentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
@@ -29,7 +30,6 @@ public class MedicamentController {
     @Autowired
     private MedicamentRepository medicamentRepository;
 
-    // Dossier où les images seront stockées
     private final Path storageDirectory = Paths.get("uploaded-images").toAbsolutePath().normalize();
 
     public MedicamentController() throws IOException {
@@ -186,4 +186,13 @@ public class MedicamentController {
             return ResponseEntity.notFound().build();
         }
     }
+
+    @GetMapping("/alerts")
+    public ResponseEntity<List<Medicament>> getMedicamentAlerts() {
+        LocalDate aujourdhui = LocalDate.now();
+        List<Medicament> alertes = medicamentRepository.findAlerts(aujourdhui);
+        return ResponseEntity.ok(alertes);
+    }
+
+
 }
