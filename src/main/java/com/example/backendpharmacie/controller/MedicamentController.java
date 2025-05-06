@@ -4,12 +4,14 @@ import com.example.backendpharmacie.model.Medicament;
 import com.example.backendpharmacie.repository.MedicamentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.nio.file.*;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -98,4 +100,21 @@ public class MedicamentController {
         medicamentRepository.deleteById(id);
         return "Médicament avec id " + id + " a été supprimé";
     }
+    @GetMapping("/alerts")
+    public ResponseEntity<List<Medicament>> getMedicamentAlerts() {
+        LocalDate aujourdhui = LocalDate.now();
+
+        // Solution 1: Utilisez la date système
+        List<Medicament> alertes = medicamentRepository.findAlerts(aujourdhui);
+
+        // Solution alternative si problème de date:
+        // List<Medicament> alertes = medicamentRepository.findAll()
+        //     .stream()
+        //     .filter(m -> m.getDateExpiration().toLocalDate().isBefore(aujourdhui) ||
+        //                  m.getQteStock() <= m.getStockMin())
+        //     .collect(Collectors.toList());
+
+        return ResponseEntity.ok(alertes);
+    }
+
 }
