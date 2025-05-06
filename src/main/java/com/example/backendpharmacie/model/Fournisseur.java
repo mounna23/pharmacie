@@ -1,7 +1,7 @@
 package com.example.backendpharmacie.model;
 
 import jakarta.persistence.*;
-        import jakarta.validation.constraints.*;
+import jakarta.validation.constraints.*;
 
 @Entity
 @Table(name = "fournisseur")

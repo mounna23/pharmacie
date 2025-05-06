@@ -24,14 +24,13 @@ public class AuthenticationService {
             throw new RuntimeException("Email déjà utilisé");
         }
 
-        Utilisateur user = Utilisateur.builder()
-                .nom(request.nom())
-                .prenom(request.prenom())
-                .email(request.email())
-                .motDePasse(passwordEncoder.encode(request.motDePasse()))
-                .telephone(request.telephone())
-                .adresse(request.adresse())
-                .build();
+        Utilisateur user = new Utilisateur();
+        user.setNom(request.nom());
+        user.setPrenom(request.prenom());
+        user.setEmail(request.email());
+        user.setMotDePasse(passwordEncoder.encode(request.motDePasse()));
+        user.setTelephone(request.telephone());
+        user.setAdresse(request.adresse());
 
         repository.save(user);
         String jwtToken = jwtService.generateToken(user);

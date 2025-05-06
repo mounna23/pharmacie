@@ -18,7 +18,6 @@ import java.util.List;
 @Data // Génère automatiquement getters/setters
 @NoArgsConstructor // Constructeur sans arguments
 @AllArgsConstructor // Constructeur avec tous les arguments
-@Builder // Génère la méthode builder()
 public class Utilisateur implements UserDetails {
 
     @Id
@@ -83,5 +82,61 @@ public class Utilisateur implements UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public @NotBlank(message = "Le nom est obligatoire") String getNom() {
+        return nom;
+    }
+
+    public void setNom(@NotBlank(message = "Le nom est obligatoire") String nom) {
+        this.nom = nom;
+    }
+
+    public @NotBlank(message = "Le prénom est obligatoire") String getPrenom() {
+        return prenom;
+    }
+
+    public void setPrenom(@NotBlank(message = "Le prénom est obligatoire") String prenom) {
+        this.prenom = prenom;
+    }
+
+    public @Email(message = "L'email doit être valide") String getEmail() {
+        return email;
+    }
+
+    public void setEmail(@Email(message = "L'email doit être valide") String email) {
+        this.email = email;
+    }
+
+    public @NotBlank(message = "Le mot de passe est obligatoire") String getMotDePasse() {
+        return motDePasse;
+    }
+
+    public void setMotDePasse(@NotBlank(message = "Le mot de passe est obligatoire") String motDePasse) {
+        this.motDePasse = motDePasse;
+    }
+
+    public @NotBlank(message = "Le téléphone est obligatoire") String getTelephone() {
+        return telephone;
+    }
+
+    public void setTelephone(@NotBlank(message = "Le téléphone est obligatoire") String telephone) {
+        this.telephone = telephone;
+    }
+
+    public @NotBlank(message = "L'adresse est obligatoire") String getAdresse() {
+        return adresse;
+    }
+
+    public void setAdresse(@NotBlank(message = "L'adresse est obligatoire") String adresse) {
+        this.adresse = adresse;
     }
 }
