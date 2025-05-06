@@ -4,10 +4,15 @@ import com.example.backendpharmacie.model.Medicament;
 import com.example.backendpharmacie.repository.MedicamentRepository;
 import com.example.backendpharmacie.service.MedicamentService;
 import org.springframework.beans.factory.annotation.Autowired;
+<<<<<<< HEAD
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+=======
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.http.*;
 import org.springframework.security.access.prepost.PreAuthorize;
+>>>>>>> 400c6594034ff53354217d725033ac1ba969d9d2
 import org.springframework.util.StringUtils;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -16,7 +21,10 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.nio.file.*;
+<<<<<<< HEAD
+=======
 import java.sql.Date;
+>>>>>>> 400c6594034ff53354217d725033ac1ba969d9d2
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
@@ -186,6 +194,7 @@ public class MedicamentController {
             return ResponseEntity.notFound().build();
         }
     }
+<<<<<<< HEAD
 
     @GetMapping("/alerts")
     public ResponseEntity<List<Medicament>> getMedicamentAlerts() {
@@ -196,3 +205,23 @@ public class MedicamentController {
 
 
 }
+=======
+    @GetMapping("/alerts")
+    public ResponseEntity<List<Medicament>> getMedicamentAlerts() {
+        LocalDate aujourdhui = LocalDate.now();
+
+        // Solution 1: Utilisez la date système
+        List<Medicament> alertes = medicamentRepository.findAlerts(aujourdhui);
+
+        // Solution alternative si problème de date:
+        // List<Medicament> alertes = medicamentRepository.findAll()
+        //     .stream()
+        //     .filter(m -> m.getDateExpiration().toLocalDate().isBefore(aujourdhui) ||
+        //                  m.getQteStock() <= m.getStockMin())
+        //     .collect(Collectors.toList());
+
+        return ResponseEntity.ok(alertes);
+    }
+
+}
+>>>>>>> 08746887bf2791eee6454cc9a1249e5319534d84

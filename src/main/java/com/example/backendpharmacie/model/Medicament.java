@@ -1,9 +1,6 @@
 package com.example.backendpharmacie.model;
 
 import jakarta.persistence.*;
-
-import java.time.LocalDate;
-import java.time.ZoneId;
 import java.util.Date;
 
 @Entity
@@ -128,11 +125,5 @@ public class Medicament {
 
     public void setQteStock(Integer qteStock) {
         this.qteStock = qteStock;
-    }
-
-    public LocalDate getExpirationLocalDate() {
-        return this.dateExpiration.toInstant()
-                .atZone(ZoneId.systemDefault())
-                .toLocalDate();
     }
 }
